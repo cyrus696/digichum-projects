@@ -1,0 +1,262 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* Prevent horizontal scroll */
+}
+
+.signup-container {
+  display: flex;
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* LEFT SIDE */
+.signup-left {
+  width: 100%;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: rgb(0, 0, 0);
+  padding-top: 80px;
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: url('/Sources/Images/Sign\ up\ page\ img.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.signup-left h1 {
+  /* padding-bottom: 70%;  REMOVED: This was causing huge vertical scroll */
+  margin-bottom: 50px;
+  /* Added reasonable margin instead */
+  font-size: 42px;
+  display: flex;
+  justify-content: center;
+  color: white;
+  /* Ensure visibility */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  /* Improve readability on image */
+}
+
+.signup-left p {
+  margin-top: 15px;
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+/* RIGHT SIDE */
+.signup-right {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  max-width: 380px;
+  background: rgba(28, 28, 29, 0.95);
+  border-radius: 14px;
+  padding: 25px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+}
+
+.signup-form {
+  width: 100%;
+  /* CHANGED: Was 320px, fixed to let it shrink */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.signup-form h2 {
+  margin-bottom: 25px;
+}
+
+.signup-form input,
+.signup-form select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.signup-form button {
+  width: 100%;
+  padding: 12px;
+  background: #3b3bfa;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.signup-form button:hover {
+  background: #3956db;
+}
+
+.terms {
+  display: flex;
+  align-self: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  margin-bottom: 15px;
+  color: white;
+  white-space: nowrap;
+}
+
+.terms input {
+  margin: 0;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.login-link a {
+  color: #edeef0;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.form-title {
+  color: white;
+  margin-bottom: 20px;
+}
+
+/* PRIMARY BUTTON */
+.primary-btn {
+  width: 100%;
+  padding: 12px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* OR DIVIDER */
+.or-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: #aaa;
+  font-size: 14px;
+  width: 100%;
+}
+
+.or-divider span {
+  flex: 1;
+  height: 1px;
+  background: #555;
+}
+
+.or-divider p {
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* GOOGLE BUTTON */
+.google-btn {
+  width: 100%;
+  padding: 12px;
+  background: white;
+  color: black;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.google-btn img {
+  width: 18px;
+  height: 18px;
+}
+
+.google-btn:hover {
+  background: #f1f1f1;
+}
+
+/* LOGIN LINK */
+.login-link {
+  margin-top: 20px;
+  text-align: center;
+  color: #aaa;
+}
+
+.login-link a {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .signup-container {
+      flex-direction: row;
+      position: relative;
+  }
+
+  .signup-left {
+      width: 100%;
+      height: 100vh;
+      padding: 30px;
+  }
+
+  .signup-right {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 85%;
+      max-width: 380px;
+      padding: 25px;
+  }
+
+  .signup-form {
+      width: 100%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .signup-left {
+      width: 100%;
+      padding-top: 100px;
+  }
+
+  .signup-right {
+      width: 60%;
+  }
+
+  /* Ensure form doesn't stay fixed width here either */
+  .signup-form {
+      width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .signup-left {
+      height: 50vh;
+  }
+
+  .signup-form h2 {
+      font-size: 22px;
+  }
+
+  input {
+      padding: 10px;
+  }
+}
