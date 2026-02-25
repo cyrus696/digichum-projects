@@ -1,5 +1,5 @@
-import React from 'react';
-import newsletterBg from '../assets/search-bg.webp'; // Using search-bg as a high quality fallback per design
+
+
 
 const Newsletter = () => {
     return (

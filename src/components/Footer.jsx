@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => {
     return (
-        <footer className="bg-[#3C3713] text-white p-[60px_80px] flex justify-between items-start flex-wrap gap-10 max-md:flex-col max-md:p-[40px_30px]">
+        <footer className="bg-[#343434] text-white p-[60px_80px] flex justify-between items-start flex-wrap gap-10 max-md:flex-col max-md:p-[40px_30px]">
             <div className="flex flex-col gap-10">
                 <div className="text-[28px] font-normal tracking-[1px]">Dwello</div>
                 <div className="flex flex-col gap-2">

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import heroBg from '../assets/hero-bg.webp';
-import searchBg from '../assets/search-bg.webp';
+import heroBg from '../assets/backgrounds/Landing page.png';
+import searchBg from '../assets/backgrounds/search-bg.webp';
 
 const Hero = () => {
     return (
