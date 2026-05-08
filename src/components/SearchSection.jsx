@@ -34,6 +34,7 @@ import commercialLeaseImg from '../assets/properties/Lease.webp';
 // Reuseable Scroll Container
 const ScrollContainer = ({ title, items, type = 'property', imageHeight = 'h-[180px]' }) => {
     const scrollRef = useRef(null);
+    const navigate = useNavigate();
 
     const scroll = (direction) => {
         if (scrollRef.current) {
@@ -73,6 +74,11 @@ const ScrollContainer = ({ title, items, type = 'property', imageHeight = 'h-[18
                 {items.map((item, idx) => (
                     <div
                         key={idx}
+                        onClick={() => {
+                            if (type !== 'simple' && item.link) {
+                                navigate(item.link);
+                            }
+                        }}
                         className="min-w-[280px] bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 snap-start flex-shrink-0 cursor-pointer group/card"
                     >
                         {type !== 'simple' ? (
@@ -203,10 +209,10 @@ const SearchSection = () => {
     ];
 
     const newlyLaunchedProjects = [
-        { title: "Sunrise Heights", desc: "Luxury Living in Mumbai", price: "Starts ₹ 2.5 Cr", image: project1, tag: "New Launch" },
-        { title: "Green Acres", desc: "Eco-friendly plots in Pune", price: "Starts ₹ 45 L", image: project2, tag: "Trending" },
-        { title: "Tech Park Plaza", desc: "Office Spaces in Bangalore", price: "Starts ₹ 1.8 Cr", image: project3, tag: "Commercial" },
-        { title: "Azure Bay", desc: "Sea view apartments, Chennai", price: "Starts ₹ 3.2 Cr", image: project1, tag: "Luxury" },
+        { title: "Sunrise Heights", desc: "Luxury Living in Mumbai", price: "Starts ₹ 2.5 Cr", image: project1, tag: "New Launch", link: "/project/dev-1-proj-1" },
+        { title: "Green Acres", desc: "Eco-friendly plots in Pune", price: "Starts ₹ 45 L", image: project2, tag: "Trending", link: "/project/dev-1-proj-2" },
+        { title: "Tech Park Plaza", desc: "Office Spaces in Bangalore", price: "Starts ₹ 1.8 Cr", image: project3, tag: "Commercial", link: "/project/dev-2-proj-1" },
+        { title: "Azure Bay", desc: "Sea view apartments, Chennai", price: "Starts ₹ 3.2 Cr", image: project1, tag: "Luxury", link: "/project/dev-2-proj-2" },
     ];
 
     // Data that appears ONLY when a city is selected
@@ -562,13 +568,23 @@ const SearchSection = () => {
                             autoFocus={isSearchOpen}
                             value={searchText}
                             onChange={handleSearchInput}
-                            className="flex-1 border-none text-xl outline-none font-light text-gray-800 placeholder-gray-400"
+                            onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
+                            className="flex-1 border-none text-base sm:text-xl outline-none font-light text-gray-800 placeholder-gray-400 min-w-0"
                         />
+                        {searchText.trim().length > 0 && (
+                            <button
+                                className="shrink-0 px-4 sm:px-5 py-2 rounded-full bg-[#3E3D23] text-white text-sm font-medium hover:bg-[#2e2c18] transition-colors flex items-center justify-center shadow-lg"
+                                onClick={handleSearch}
+                            >
+                                Search
+                            </button>
+                        )}
                         <button
-                            className="shrink-0 px-5 py-2 rounded-full bg-[#3E3D23] text-white text-sm font-medium hover:bg-[#2e2c18] transition-colors"
+                            className="shrink-0 px-3 sm:px-5 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center"
                             onClick={() => setIsSearchOpen(false)}
                         >
-                            ✕ Close
+                            <span className="hidden sm:inline">✕ Close</span>
+                            <span className="sm:hidden">✕</span>
                         </button>
                     </div>
                 </div>

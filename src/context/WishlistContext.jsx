@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 const WishlistContext = createContext(null);
 
@@ -29,15 +30,19 @@ export const WishlistProvider = ({ children }) => {
     // Remove a property by id
     const removeFromWishlist = (propertyId) => {
         setWishlist(prev => prev.filter(p => p.id !== propertyId));
+        toast.error('Removed from wishlist', { id: `wishlist-remove-${propertyId}` });
     };
 
     // Toggle — add if not in list, remove if already there
     const toggleWishlist = (property) => {
-        setWishlist(prev => {
-            const exists = prev.some(p => p.id === property.id);
-            if (exists) return prev.filter(p => p.id !== property.id);
-            return [...prev, property];
-        });
+        const exists = wishlist.some(p => p.id === property.id);
+        if (exists) {
+            toast.error('Removed from wishlist', { id: `wishlist-toggle-${property.id}` });
+            setWishlist(prev => prev.filter(p => p.id !== property.id));
+        } else {
+            toast.success('Added to wishlist!', { id: `wishlist-toggle-${property.id}` });
+            setWishlist(prev => [...prev, property]);
+        }
     };
 
     // Check if a property is wishlisted

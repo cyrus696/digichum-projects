@@ -93,11 +93,18 @@ const Dashboard = () => {
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {wishlist.map((item) => (
-                                    <div key={item.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 group cursor-pointer hover:shadow-md transition-all">
+                                    <div 
+                                        key={item.id} 
+                                        onClick={() => navigate(item.link || `/property/${item.id}`)}
+                                        className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 group cursor-pointer hover:shadow-md transition-all"
+                                    >
                                         <div className="h-48 overflow-hidden relative">
                                             <img src={item.image} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt={item.title} />
                                             <button
-                                                onClick={() => removeFromWishlist(item.id)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    removeFromWishlist(item.id);
+                                                }}
                                                 className="absolute top-3 right-3 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center text-red-500 shadow-sm hover:scale-110 transition-transform"
                                                 title="Remove from wishlist"
                                             >

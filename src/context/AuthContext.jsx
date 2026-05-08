@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 const AuthContext = createContext(null);
 
@@ -33,6 +34,7 @@ export const AuthProvider = ({ children }) => {
 
         const userData = { email, name: displayName, initials };
         setUser(userData);
+        toast.success(`Welcome back, ${displayName}!`);
         return userData;
     };
 
@@ -46,11 +48,13 @@ export const AuthProvider = ({ children }) => {
 
         const userData = { email, name, initials };
         setUser(userData);
+        toast.success('Account created successfully!');
         return userData;
     };
 
     const logout = () => {
         setUser(null);
+        toast.success('Logged out successfully.');
     };
 
     return (
