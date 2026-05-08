@@ -80,14 +80,29 @@ const Navbar = () => {
                 </div>
             </Link>
 
-            {/* Hamburger Icon (Mobile) */}
-            <div
-                className="hidden max-md:flex flex-col gap-[5px] cursor-pointer z-[1001]"
-                onClick={() => setIsOpen(!isOpen)}
-            >
-                <span className={`w-[25px] h-[2px] bg-white transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-[7px]' : ''}`}></span>
-                <span className={`w-[25px] h-[2px] bg-white transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`}></span>
-                <span className={`w-[25px] h-[2px] bg-white transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-[7px]' : ''}`}></span>
+            {/* Mobile Icons Container */}
+            <div className="hidden max-md:flex items-center gap-5 z-[1001]">
+                {/* Mobile Wishlist Icon */}
+                <Link to="/dashboard" className="relative flex items-center justify-center no-underline" title="My Wishlist">
+                    <svg className={`w-[22px] h-[22px] transition-colors ${wishlist.length > 0 ? 'fill-red-500 text-red-500' : 'fill-transparent text-white/90'}`} stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    {wishlist.length > 0 && (
+                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-md">
+                            {wishlist.length}
+                        </span>
+                    )}
+                </Link>
+
+                {/* Hamburger Icon */}
+                <div
+                    className="flex flex-col gap-[5px] cursor-pointer"
+                    onClick={() => setIsOpen(!isOpen)}
+                >
+                    <span className={`w-[25px] h-[2px] bg-white transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-[7px]' : ''}`}></span>
+                    <span className={`w-[25px] h-[2px] bg-white transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`}></span>
+                    <span className={`w-[25px] h-[2px] bg-white transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-[7px]' : ''}`}></span>
+                </div>
             </div>
 
             {/* Nav Links - Center */}
@@ -144,11 +159,39 @@ const Navbar = () => {
                             </button>
                         </>
                     )}
+                    {/* Builder Portal — always visible in mobile menu */}
+                    <div className="pt-3 border-t border-white/10">
+                        <Link
+                            to="/builder/login"
+                            className="flex items-center justify-center gap-2 no-underline text-amber-400 font-semibold text-sm py-2.5 rounded-lg border border-amber-400/30 hover:bg-amber-400/10 transition-all duration-300"
+                        >
+                            🏗️ Builder / Developer Portal
+                        </Link>
+                    </div>
                 </div>
             </nav>
 
             {/* Right Section - Auth Buttons or Profile (Desktop) */}
             <div className="flex items-center gap-4 max-md:hidden">
+                <Link to="/builder/login"
+                    className="text-amber-400 no-underline text-xs font-semibold hover:text-amber-300 transition-colors duration-300 px-3 py-1.5 rounded-lg border border-amber-400/30 hover:border-amber-400/60 hover:bg-amber-400/10"
+                    title="Builder & Developer Portal"
+                >
+                    🏗️ For Builders
+                </Link>
+
+                {/* Desktop Wishlist Icon */}
+                <Link to="/dashboard" className="relative flex items-center justify-center no-underline mx-2" title="My Wishlist">
+                    <svg className={`w-5 h-5 transition-colors ${wishlist.length > 0 ? 'fill-red-500 text-red-500' : 'fill-transparent text-white/80 hover:text-white'}`} stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    {wishlist.length > 0 && (
+                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-md">
+                            {wishlist.length}
+                        </span>
+                    )}
+                </Link>
+
                 {!isAuthenticated ? (
                     // Show Login/Sign Up buttons when not authenticated
                     <div className="flex items-center gap-3">
@@ -166,17 +209,6 @@ const Navbar = () => {
                             onClick={() => setIsProfileOpen(!isProfileOpen)}
                             className="flex items-center gap-2 text-white/90 hover:text-white transition-colors group bg-transparent border-none cursor-pointer"
                         >
-                            {/* Wishlist badge */}
-                            {wishlist.length > 0 && (
-                                <Link to="/dashboard" className="relative mr-1 no-underline" title="My Wishlist">
-                                    <svg className="w-5 h-5 fill-current text-white/80 hover:text-red-400 transition-colors" viewBox="0 0 24 24">
-                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                                    </svg>
-                                    <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                                        {wishlist.length}
-                                    </span>
-                                </Link>
-                            )}
                             <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center border border-white/20 group-hover:border-white/40 transition-all font-bold text-sm">
                                 {user?.initials || '?'}
                             </div>

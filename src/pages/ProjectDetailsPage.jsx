@@ -225,7 +225,7 @@ const ProjectDetailsPage = () => {
             </div>
 
             {/* Sticky Navigation */}
-            <div className="sticky top-[100px] bg-white border-b border-gray-200 z-40 shadow-sm">
+            <div className="sticky top-[72px] bg-white border-b border-gray-200 z-40 shadow-sm">
                 <div className="px-[6%]">
                     <div className="max-w-[1400px] mx-auto relative">
                         {/* Left Scroll Button */}

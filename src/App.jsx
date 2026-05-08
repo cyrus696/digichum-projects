@@ -1,6 +1,8 @@
-import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { BuilderAuthProvider } from './context/BuilderAuthContext';
+import BuilderLogin from './pages/BuilderLogin';
+import BuilderDashboard from './pages/builder/BuilderDashboard';
 import { WishlistProvider } from './context/WishlistContext';
 import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
@@ -11,6 +13,7 @@ import Plots from './pages/Plots';
 import NewsArticles from './pages/NewsArticles';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import { Toaster } from 'react-hot-toast';
 
 import PropertyDetails from './pages/PropertyDetails';
 import Dashboard from './pages/Dashboard';
@@ -33,10 +36,12 @@ import SearchResults from './pages/SearchResults';
 
 function App() {
   return (
+    <BuilderAuthProvider>
     <AuthProvider>
       <WishlistProvider>
         <Router>
           <ScrollToTop />
+          <Toaster position="top-right" toastOptions={{ duration: 3000, style: { borderRadius: '10px', background: '#333', color: '#fff' } }} />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/buy" element={<Buy />} />
@@ -72,10 +77,15 @@ function App() {
 
             {/* About Route */}
             <Route path="/about" element={<About />} />
+
+            {/* Builder Portal Routes */}
+            <Route path="/builder/login" element={<BuilderLogin />} />
+            <Route path="/builder/dashboard" element={<BuilderDashboard />} />
           </Routes>
         </Router>
       </WishlistProvider>
     </AuthProvider>
+    </BuilderAuthProvider>
   )
 }
 

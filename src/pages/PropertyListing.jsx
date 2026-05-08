@@ -9,6 +9,56 @@ import bhk1Img from '../assets/properties/1bhk house.webp';
 const PropertyListing = () => {
     const { category } = useParams();
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Properties State
+    const [properties, setProperties] = useState([]);
+
+    // Simulate API fetch delay & Load Builder Listings
+    useEffect(() => {
+        setIsLoading(true);
+
+        const mockProperties = [
+            { id: 1, title: "Luxury Sea View Apartment", location: "Bandra West, Mumbai", price: "₹ 5.5 Cr", bhk: 3, area: "1800 sq.ft", posted: "2 days ago", image: flatsImg, verified: true },
+            { id: 2, title: "Modern Villa with Garden", location: "Lonavala", price: "₹ 3.2 Cr", bhk: 4, area: "2500 sq.ft", posted: "1 week ago", image: smallHouseImg, verified: false },
+            { id: 3, title: "Cozy Studio Apartment", location: "Andheri East", price: "₹ 85 L", bhk: 1, area: "650 sq.ft", posted: "3 days ago", image: bhk1Img, verified: true },
+            { id: 4, title: "Spacious 3BHK Flat", location: "Thane West", price: "₹ 1.8 Cr", bhk: 3, area: "1400 sq.ft", posted: "5 days ago", image: flatsImg, verified: true },
+            { id: 5, title: "Premium Penthouse", location: "Juhu", price: "₹ 12 Cr", bhk: 5, area: "3500 sq.ft", posted: "1 day ago", image: smallHouseImg, verified: true },
+        ];
+
+        // Fetch properties posted by the Builder from localStorage
+        const savedBuilderListings = localStorage.getItem('builder_listings');
+        let finalProperties = mockProperties;
+
+        if (savedBuilderListings) {
+            try {
+                const parsedListings = JSON.parse(savedBuilderListings);
+                const activeListings = parsedListings.filter(l => l.status === 'Active');
+
+                // Format builder properties to match the frontend card structure
+                const formattedBuilderListings = activeListings.map(listing => ({
+                    id: listing.id,
+                    title: listing.name,
+                    location: listing.location,
+                    price: listing.price,
+                    bhk: listing.type === 'Plot' ? 'N/A' : (listing.name.match(/\d+/) ? listing.name.match(/\d+/)[0] : '2'),
+                    area: 'N/A', // Assuming builder listing doesn't explicitly store area yet in simple mock
+                    posted: listing.posted || 'Just now',
+                    image: smallHouseImg, // Fallback image for builder listings
+                    verified: true
+                }));
+
+                finalProperties = [...formattedBuilderListings, ...mockProperties];
+            } catch (e) {
+                console.error('Failed to parse builder listings');
+            }
+        }
+
+        setProperties(finalProperties);
+
+        const timer = setTimeout(() => setIsLoading(false), 1200);
+        return () => clearTimeout(timer);
+    }, [category]);
 
     // Lock body scroll when mobile filter is open
     useEffect(() => {
@@ -37,15 +87,6 @@ const PropertyListing = () => {
         budgetRange: [1000000, 100000000],
         verifiedOnly: false
     });
-
-    // Mock Data
-    const properties = [
-        { id: 1, title: "Luxury Sea View Apartment", location: "Bandra West, Mumbai", price: "₹ 5.5 Cr", bhk: 3, area: "1800 sq.ft", posted: "2 days ago", image: flatsImg, verified: true },
-        { id: 2, title: "Modern Villa with Garden", location: "Lonavala", price: "₹ 3.2 Cr", bhk: 4, area: "2500 sq.ft", posted: "1 week ago", image: smallHouseImg, verified: false },
-        { id: 3, title: "Cozy Studio Apartment", location: "Andheri East", price: "₹ 85 L", bhk: 1, area: "650 sq.ft", posted: "3 days ago", image: bhk1Img, verified: true },
-        { id: 4, title: "Spacious 3BHK Flat", location: "Thane West", price: "₹ 1.8 Cr", bhk: 3, area: "1400 sq.ft", posted: "5 days ago", image: flatsImg, verified: true },
-        { id: 5, title: "Premium Penthouse", location: "Juhu", price: "₹ 12 Cr", bhk: 5, area: "3500 sq.ft", posted: "1 day ago", image: smallHouseImg, verified: true },
-    ];
 
     const categoryTitles = {
         popular: "Popular Properties",
@@ -213,71 +254,102 @@ const PropertyListing = () => {
                     {/* Property List */}
                     <main className="flex-1">
                         <div className="space-y-6">
-                            {properties.map(property => (
-                                <div key={property.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-all group">
-                                    <div className="flex flex-col md:flex-row">
-                                        {/* Image */}
-                                        <div className="md:w-[300px] h-[220px] md:h-auto flex-shrink-0 relative overflow-hidden">
-                                            <img src={property.image} alt={property.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                                            {property.verified && (
-                                                <div className="absolute top-3 left-3 bg-green-500 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 shadow-md">
-                                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
-                                                    Verified
-                                                </div>
-                                            )}
-                                            <button className="absolute top-3 right-3 w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-sm text-gray-400 hover:text-red-500">
-                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                                            </button>
-                                        </div>
-
-                                        {/* Details */}
+                            {isLoading ? (
+                                // Render 3 Skeleton Loaders
+                                [...Array(3)].map((_, i) => (
+                                    <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col md:flex-row animate-pulse">
+                                        <div className="md:w-[300px] h-[220px] md:h-auto bg-gray-200 flex-shrink-0"></div>
                                         <div className="flex-1 p-6 flex flex-col justify-between">
                                             <div>
                                                 <div className="flex justify-between items-start mb-3">
-                                                    <div>
-                                                        <h3 className="text-xl font-medium text-gray-900 mb-1 group-hover:text-[#3E3D23] transition-colors">
-                                                            <Link to={`/property/${property.id}`}>{property.title}</Link>
-                                                        </h3>
-                                                        <p className="text-gray-500 flex items-center gap-1 text-sm">
-                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                                            {property.location}
-                                                        </p>
+                                                    <div className="w-2/3">
+                                                        <div className="h-6 bg-gray-200 rounded-md w-3/4 mb-2"></div>
+                                                        <div className="h-4 bg-gray-200 rounded-md w-1/2"></div>
                                                     </div>
-                                                    <div className="text-right">
-                                                        <div className="text-2xl font-bold text-[#3E3D23]">{property.price}</div>
+                                                    <div className="w-1/4">
+                                                        <div className="h-8 bg-gray-200 rounded-md w-full"></div>
                                                     </div>
                                                 </div>
-
-                                                {/* Specs */}
-                                                <div className="flex gap-6 mb-4 flex-wrap">
-                                                    <div className="flex items-center gap-2 text-gray-600">
-                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                                                        <span className="text-sm font-medium">{property.bhk} BHK</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-2 text-gray-600">
-                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
-                                                        <span className="text-sm font-medium">{property.area}</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-2 text-gray-400">
-                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                                        <span className="text-sm">Posted {property.posted}</span>
-                                                    </div>
+                                                <div className="flex gap-6 mb-4">
+                                                    <div className="h-4 bg-gray-200 rounded-md w-16"></div>
+                                                    <div className="h-4 bg-gray-200 rounded-md w-24"></div>
+                                                    <div className="h-4 bg-gray-200 rounded-md w-20"></div>
                                                 </div>
                                             </div>
-
-                                            {/* Actions */}
                                             <div className="flex gap-3 pt-4 border-t border-gray-100">
-                                                <button className="flex-1 py-3 bg-[#3E3D23] text-white rounded-xl font-medium hover:bg-[#2c2b19] transition-colors shadow-md shadow-[#3E3D23]/20">
-                                                    Contact Owner
-                                                </button>
-                                                <Link to={`/property/${property.id}`} className="flex-1 py-3 bg-white border-2 border-[#3E3D23] text-[#3E3D23] rounded-xl font-medium hover:bg-gray-50 transition-colors text-center">
-                                                    View Details
-                                                </Link>
+                                                <div className="flex-1 h-12 bg-gray-200 rounded-xl"></div>
+                                                <div className="flex-1 h-12 bg-gray-200 rounded-xl"></div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))
+                            ) : (
+                                properties.map(property => (
+                                    <div key={property.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-all group">
+                                        <div className="flex flex-col md:flex-row">
+                                            {/* Image */}
+                                            <div className="md:w-[300px] h-[220px] md:h-auto flex-shrink-0 relative overflow-hidden">
+                                                <img src={property.image} alt={property.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                                {property.verified && (
+                                                    <div className="absolute top-3 left-3 bg-green-500 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 shadow-md">
+                                                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
+                                                        Verified
+                                                    </div>
+                                                )}
+                                                <button className="absolute top-3 right-3 w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-sm text-gray-400 hover:text-red-500">
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                                </button>
+                                            </div>
+
+                                            {/* Details */}
+                                            <div className="flex-1 p-6 flex flex-col justify-between">
+                                                <div>
+                                                    <div className="flex justify-between items-start mb-3">
+                                                        <div>
+                                                            <h3 className="text-xl font-medium text-gray-900 mb-1 group-hover:text-[#3E3D23] transition-colors">
+                                                                <Link to={`/property/${property.id}`}>{property.title}</Link>
+                                                            </h3>
+                                                            <p className="text-gray-500 flex items-center gap-1 text-sm">
+                                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                                                {property.location}
+                                                            </p>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <div className="text-2xl font-bold text-[#3E3D23]">{property.price}</div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Specs */}
+                                                    <div className="flex gap-6 mb-4 flex-wrap">
+                                                        <div className="flex items-center gap-2 text-gray-600">
+                                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                                                            <span className="text-sm font-medium">{property.bhk} BHK</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-2 text-gray-600">
+                                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                                                            <span className="text-sm font-medium">{property.area}</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-2 text-gray-400">
+                                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                            <span className="text-sm">Posted {property.posted}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Actions */}
+                                                <div className="flex gap-3 pt-4 border-t border-gray-100">
+                                                    <button className="flex-1 py-3 bg-[#3E3D23] text-white rounded-xl font-medium hover:bg-[#2c2b19] transition-colors shadow-md shadow-[#3E3D23]/20">
+                                                        Contact Owner
+                                                    </button>
+                                                    <Link to={`/property/${property.id}`} className="flex-1 py-3 bg-white border-2 border-[#3E3D23] text-[#3E3D23] rounded-xl font-medium hover:bg-gray-50 transition-colors text-center">
+                                                        View Details
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
                         </div>
 
                         {/* Pagination */}
